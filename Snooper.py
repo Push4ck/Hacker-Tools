@@ -5,7 +5,7 @@ import re
 # Function to get nearby devices using arp-scan
 def get_nearby_devices():
     # Run the arp-scan command with --localnet option and capture the output
-    output = subprocess.run(["arp-scan", "--localnet"], capture_output=True).stdout.decode()
+    output = subprocess.check_output(["arp-scan", "--localnet"]).decode()
 
     # If the output is empty, return an empty list
     if not output:
@@ -26,7 +26,7 @@ def get_nearby_devices():
             hostname = parts[2]
 
             # Check if the IP address and MAC address match the expected format
-            if re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", ip_address) and re.match(r"^[a-fA-F0-9:]{17}$", mac_address):
+            if re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", ip_address) is not None and re.match(r"^[a-fA-F0-9:]{17}$", mac_address) is not None:
                 devices.append({"ip_address": ip_address, "mac_address": mac_address, "hostname": hostname})
     return devices
 
