@@ -1,9 +1,3 @@
 # Hacker-Tools
-Config files for my GitHub profile.
 
-Just a normal script, but it may useful if you know how to use it.
-
-Simply just give it cmd:
-
-#chmod +x *
-#./ip-rotation.sh
+These are only some little Python bash scripts that require further work, but you can use them for simple tasks.
