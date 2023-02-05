@@ -1,3 +1,4 @@
+# Import required libraries
 import socket
 
 host = 'your_server_ip' # replace with your server IP
