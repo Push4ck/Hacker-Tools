@@ -1,0 +1,15 @@
+# New Variant of DNSp Espionage Malware Discovered: Karkoff
+
+A new sophisticated operation has been discovered by the cybercriminal group behind the DNSp espionage malware campaign. The group has improved the efficacy of its operations by adopting new tactics, techniques, and procedures, making its cyber attacks more targeted, organized, and sophisticated.
+
+The DNSp espionage malware infects victims with a custom remote administrative tool that communicates with the attacker-controlled command and control server via HTTP and DNS communication. According to a [**new report**](https://blog.talosintelligence.com/dnspionage-brings-out-karkoff/) published by Cisco's Talos threat research team, the group has now started performing reconnaissance on their victims before infecting them with a new piece of malware called Karkoff, which allows them to selectively choose targets to remain undetected.
+
+During the reconnaissance phase, attackers gather system information related to the workstation environment, operating system, domain, and list of running processes on the victim's machine. The Karkoff malware, developed in .NET, enables attackers to execute arbitrary code remotely from their command and control server.
+
+The Karkoff malware generates a log file on the victim's system, which contains a list of all commands executed with a timestamp. This log file can be used to create a timeline of command execution, which can be extremely useful when responding to this type of threat.
+
+The newly discovered attacks also target the Middle Eastern region, including Lebanon and the United Arab Emirates (UAE). To reduce the risk of becoming a victim of such attacks, it is recommended to disable macros, use reliable antivirus software, and stay vigilant and informed about social engineering techniques.
+
+The U.S. Department of Homeland Security ([**DHS**](https://cyberhub.hashnode.dev/urgent-security-measures-dhs-orders-federal-agencies-to-audit-dns-records)) issued an "emergency directive" to all federal agencies earlier this year, ordering IT staff to audit DNS records for their respective website domains or other agency-managed domains due to several public reports of [**DNS hijacking**](https://cyberhub.hashnode.dev/roaming-mantis-the-upgraded-malware-hijacking-routers-and-stealing-sensitive-information) attacks.
+
+Thank you for reading our blog today. We hope you found the information helpful and informative. If you enjoyed this blog, be sure to follow us on [**Twitter**](https://twitter.com/areyysharma), [**Instagram**](https://www.instagram.com/official_cyber_hub/), [**Linkedin**](https://www.linkedin.com/in/technical-human/), [**GitHub**](https://github.com/pushkarsharma23), [**Website**](https://officialcyberhub.wixsite.com/cyberhub), and [**Youtube**](https://www.youtube.com/@OfficialCyberHub) for more exciting content and updates. If you have any questions or comments, please feel free to reach out to us. We would love to hear from you. Don't forget to share this with your friends and family who may also find this information useful. Thank you for your support and stay tuned for more!
