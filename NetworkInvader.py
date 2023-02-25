@@ -3,11 +3,21 @@ import sys
 import platform
 import re
 
-def change_ip(interface, new_ip, subnet_mask, gateway, check=False):
+
+def change_ip(interface="", new_ip="", subnet_mask="", gateway="", check=False):
+    if not interface:
+        interface = input("Enter the interface name: ")
+    if not new_ip:
+        new_ip = input("Enter the new IP address: ")
+    if not subnet_mask:
+        subnet_mask = input("Enter the subnet mask: ")
+    if not gateway:
+        gateway = input("Enter the default gateway: ")
+
     if not interface or not new_ip or not subnet_mask or not gateway:
         print("Error: interface, new_ip, subnet_mask and gateway are all required parameters")
         return 1
-    
+
     if not isinstance(new_ip, str) or not isinstance(subnet_mask, str) or not isinstance(gateway, str):
         print("Error: Invalid input type. All inputs must be strings.")
         return 1
@@ -32,14 +42,8 @@ def change_ip(interface, new_ip, subnet_mask, gateway, check=False):
             ['ifconfig', interface, 'up'],
             ['route', 'add', 'default', 'gw', gateway]
         ])
-    elif platform.system() == 'Windows':
-        command_list.extend([
-            ['netsh', 'interface', 'set', 'interface', interface, 'admin=disable'],
-            ['netsh', 'interface', 'ip', 'set', 'addresses', interface, 'static', new_ip, subnet_mask, gateway],
-            ['netsh', 'interface', 'set', 'interface', interface, 'admin=enable']
-        ])
     else:
-        print(f"Error: This code is only supported on Linux and Windows systems.")
+        print(f"Error: This code is only supported on Linux systems. Current operating system is {platform.system()}.")
         return 1
 
     for command in command_list:
@@ -52,25 +56,11 @@ def change_ip(interface, new_ip, subnet_mask, gateway, check=False):
     if check:
         if platform.system() == 'Linux':
             try:
-                current_ip = subprocess.check_output(['ip','-4', 'address', 'show', interface]).decode().strip().split('\n')[-1].split()[-2]
+                subprocess.check_output(['ip', '-4', 'address', 'show', interface])
             except subprocess.CalledProcessError as e:
                 print(f"Error: Command 'ip -4 address show {interface}' failed with error code {e.returncode}")
                 return e.returncode
-        elif platform.system() == 'Windows':
-            try:
-                current_ip = subprocess.check_output(['netsh','interface', 'ip', 'show', 'address', interface]).decode().strip().split('\n')[-1].split()[-3]
-            except subprocess.CalledProcessError as e:
-                print(f"Error: Command 'netsh interface ip show address {interface}' failed with error code {e.returncode}")
-                return e.returncode
 
-    if current_ip == new_ip:
-        print("Success: IP address change successful")
-        return 0
-    else:
-        print("Error: IP address change unsuccessful")
-        return 1
-    else:
-        return 0
 
 if __name__ == '__main__':
-    sys.exit(change_ip(*sys.argv[1:]))
+    sys.exit(change_ip())
