@@ -5,6 +5,7 @@ import json
 import csv
 from datetime import datetime
 
+
 # Define the scan function to scan the network using the IP provided
 def scan(ip):
     try:
@@ -35,6 +36,7 @@ def scan(ip):
         # Raise an exception with an error message if an error occurs during the scan
         raise Exception("An error occurred while scanning the network: " + str(e))
 
+
 # Define the print_result function to print the results
 def print_result(results_list):
     # Print the header
@@ -42,6 +44,7 @@ def print_result(results_list):
     # Iterate through the results_list and print each client's information
     for client in results_list:
         print(client["ip"] + "\t\t" + client["mac"] + "\t\t" + client["hostname"])
+
 
 def save_to_txt(file_path, data):
     try:
@@ -53,10 +56,12 @@ def save_to_txt(file_path, data):
                 f.write(f"IP: {client['ip']}\tMAC: {client['mac']}\tHostname: {client['hostname']}\n")
     except FileExistsError as e:
         # Raise an exception if the file already exists
-        raise Exception(f"File {file_path} already exists")
+        raise Exception(f"File {file_path} already exists") from e
+
     except Exception as e:
         # Raise an exception if any other error occurs while saving the data to the file
         raise Exception("An error occurred while saving the output to a txt file: " + str(e))
+
 
 def save_to_xml(file_path, data):
     try:
@@ -68,6 +73,7 @@ def save_to_xml(file_path, data):
         # Raise an exception if any error occurs while saving the data to the xml file
         raise Exception("An error occurred while saving the output to an xml file: " + str(e))
 
+
 def save_to_json(file_path, data):
     try:
         # Open the file with the specified path in write mode
@@ -77,6 +83,7 @@ def save_to_json(file_path, data):
     except Exception as e:
         # Raise an exception if any error occurs while saving the data to the json file
         raise Exception("An error occurred while saving the output to a json file: " + str(e))
+
 
 def save_to_csv(file_path, data):
     try:
@@ -91,6 +98,7 @@ def save_to_csv(file_path, data):
     except Exception as e:
         # Raise an error if an exception occurs
         raise Exception("An error occurred while saving the output to a csv file: " + str(e))
+
 
 def save_to_html(data, file_path):
     try:
@@ -126,6 +134,7 @@ def save_to_html(data, file_path):
         # Raise an error if an exception occurs
         raise Exception("An error occurred while saving the data to HTML: " + str(e))
 
+
 def main():
     # Initialize the argument parser with a description
     parser = argparse.ArgumentParser(description='Network Scanner')
@@ -137,7 +146,7 @@ def main():
     parser.add_argument('-v', '--verbose', dest='verbose', help='Verbose output', action='store_true')
     # Parse the arguments
     args = parser.parse_args()
-    
+
     # Store the target IP address
     ip = args.ip
     # Store the output file path
