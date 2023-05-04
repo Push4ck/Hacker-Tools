@@ -1,3 +1,3 @@
 # Hacker-Tools
 
-These are only some little Python scripts that require further work, but you can use them for simple tasks.
+Some Python (.py) scripts were created to help hackers complete their tasks faster.
