@@ -6,6 +6,12 @@ import time
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
+def check_ip_reputation(ip):
+    # You can implement the code to check the reputation of the IP address here
+    # For example, you can use a service such as MaxMind or VirusTotal to check the reputation of the IP
+    # For the sake of this example, I'll simply return True
+    return True
+
 # List of IP addresses to cycle through
 ip_list = ['1.1.1.1', '2.2.2.2', '3.3.3.3']
 
@@ -44,9 +50,3 @@ for ip in cycle(ip_list):
         # Sleep for 1 second before retrying
         time.sleep(1)
         retries += 1
-    
-def check_ip_reputation(ip):
-    # You can implement the code to check the reputation of the IP address here
-    # For example, you can use a service such as MaxMind or VirusTotal to check the reputation of the IP
-    # For the sake of this example, I'll simply return True
-    return True
