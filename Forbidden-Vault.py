@@ -20,15 +20,19 @@ def lock_folder():
         else:
             password = getpass.getpass("Enter a password to lock the folder: ")
             hashed_password, salt = hash_password(password)
-            # Create the folder and lock it
-            os.mkdir(folder_name)
-            os.system(f'chmod 700 "{folder_name}"')
-            with open(f'{folder_name}/.password', 'w') as f:
-                f.write(hashed_password)
-            with open(f'{folder_name}/.salt', 'w') as f:
-                f.write(salt)
-            print(f"{folder_name} locked successfully.")
-            break
+            try:
+                # Create the folder and lock it
+                os.mkdir(folder_name)
+                os.system(f'chmod 700 "{folder_name}"')
+                with open(f'{folder_name}/.password', 'w') as f:
+                    f.write(hashed_password)
+                with open(f'{folder_name}/.salt', 'w') as f:
+                    f.write(salt)
+                print(f"{folder_name} locked successfully.")
+                break
+            except Exception as e:
+                print(f"Error creating the folder: {str(e)}")
+                break
 
 
 def unlock_folder():
