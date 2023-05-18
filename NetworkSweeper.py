@@ -184,9 +184,13 @@ def main():
                 elif format == "csv":
                     save_to_csv(f, scan_result)
                 elif format == "html":
-                    save_to_html(f, scan_result)
+                    save_to_html(scan_result, f)
                 # Raise an exception for unsupported output formats
                 else:
                     raise Exception(f"Error: Unsupported output file format: {format}. Supported formats: txt, xml, json, csv, html")
             except Exception as e:
                 print(f"Error saving to file format {format}: {e}")
+
+
+if __name__ == "__main__":
+    main()
