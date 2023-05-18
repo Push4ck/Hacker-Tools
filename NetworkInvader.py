@@ -15,24 +15,19 @@ def change_ip(interface="", new_ip="", subnet_mask="", gateway="", check=False):
         gateway = input("Enter the default gateway: ")
 
     if not interface or not new_ip or not subnet_mask or not gateway:
-        print("Error: interface, new_ip, subnet_mask and gateway are all required parameters")
-        return 1
+        raise ValueError("Error: interface, new_ip, subnet_mask, and gateway are all required parameters")
 
     if not isinstance(new_ip, str) or not isinstance(subnet_mask, str) or not isinstance(gateway, str):
-        print("Error: Invalid input type. All inputs must be strings.")
-        return 1
+        raise TypeError("Error: Invalid input type. All inputs must be strings.")
 
     if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", new_ip):
-        print("Error: Invalid IP address format")
-        return 1
+        raise ValueError("Error: Invalid IP address format")
 
     if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", subnet_mask):
-        print("Error: Invalid subnet mask format")
-        return 1
+        raise ValueError("Error: Invalid subnet mask format")
 
     if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", gateway):
-        print("Error: Invalid gateway format")
-        return 1
+        raise ValueError("Error: Invalid gateway format")
 
     command_list = []
     if platform.system() == 'Linux':
@@ -43,23 +38,20 @@ def change_ip(interface="", new_ip="", subnet_mask="", gateway="", check=False):
             ['route', 'add', 'default', 'gw', gateway]
         ])
     else:
-        print(f"Error: This code is only supported on Linux systems. Current operating system is {platform.system()}.")
-        return 1
+        raise NotImplementedError(f"Error: This code is only supported on Linux systems. Current operating system is {platform.system()}.")
 
     for command in command_list:
         try:
             subprocess.check_call(command)
         except subprocess.CalledProcessError as e:
-            print(f"Error: Command '{' '.join(command)}' failed with error code {e.returncode}")
-            return e.returncode
+            raise RuntimeError(f"Error: Command '{' '.join(command)}' failed with error code {e.returncode}") from e
 
     if check:
         if platform.system() == 'Linux':
             try:
                 subprocess.check_output(['ip', '-4', 'address', 'show', interface])
             except subprocess.CalledProcessError as e:
-                print(f"Error: Command 'ip -4 address show {interface}' failed with error code {e.returncode}")
-                return e.returncode
+                raise RuntimeError(f"Error: Command 'ip -4 address show {interface}' failed with error code {e.returncode}") from e
 
 
 if __name__ == '__main__':
