@@ -2,7 +2,7 @@
 import socket
 
 host = 'your_server_ip' # replace with your server IP
-port = your_port_number # replace with the port you have set for the reverse shell
+port = 'your_port_number' # replace with the port you have set for the reverse shell
 
 def check_reverse_shell(host, port):
     try:
