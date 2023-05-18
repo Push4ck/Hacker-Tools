@@ -1,9 +1,9 @@
 import subprocess
 import optparse
 import re
+import platform
 
 
-# Define a function to parse command line arguments
 def get_arguments():
     # Create an instance of OptionParser class
     parser = optparse.OptionParser()
@@ -26,8 +26,7 @@ def get_arguments():
     return options
 
 
-# Define a function to change the MAC address
-def change_mac(interface, new_mac):
+def change_mac_linux(interface, new_mac):
     # Print the message that the MAC address is changing
     print("[+] Changing MAC Address for " + interface + " to " + new_mac)
 
@@ -41,14 +40,26 @@ def change_mac(interface, new_mac):
     subprocess.call(["ifconfig", interface, "up"])
 
 
-# Define a function to get the current MAC address of an interface
-def get_current_mac(interface):
+def change_mac_windows(interface, new_mac):
+    # Print the message that the MAC address is changing
+    print("[+] Changing MAC Address for " + interface + " to " + new_mac)
+
+    # Modify the registry to set the new MAC address
+    subprocess.call(["reg", "add",
+                     "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002BE10318}\{interface}\Ndi\params\NetworkAddress",
+                     "/v", "/d", new_mac, "/f"])
+
+    # Disable and enable the specified interface
+    subprocess.call(["netsh", "interface", "set", "interface", "name=" + interface, "admin=disable"])
+    subprocess.call(["netsh", "interface", "set", "interface", "name=" + interface, "admin=enable"])
+
+
+def get_current_mac_linux(interface):
     # Get the result of running the ifconfig command on the specified interface
     ifconfig_result = subprocess.check_output(["ifconfig", interface])
 
     # Search for the MAC address in the result
-    mac_address_search_result = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w",
-                                          ifconfig_result.decode('utf-8'))
+    mac_address_search_result = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", ifconfig_result.decode('utf-8'))
 
     # Return the MAC address if found
     if mac_address_search_result:
@@ -58,18 +69,47 @@ def get_current_mac(interface):
         print("[-] MAC Address did not get changed")
 
 
+def get_current_mac_windows(interface):
+    # Get the result of querying the registry for the MAC address of the specified interface
+    result = subprocess.check_output(["reg", "query",
+                                      "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002BE10318}\{interface}\Ndi\params\NetworkAddress"])
+
+    # Search for the MAC address in the result
+    mac_address_search_result = re.search(r"NetworkAddress\s+REG_SZ\s+([\w-]+)", result.decode('utf-8'))
+
+    # Return the MAC address if found
+    if mac_address_search_result:
+        return mac_address_search_result.group(1)
+    else:
+        # Print an error message if the MAC address was not found
+        print("[-] Failed to get current MAC Address")
+
+
 # Get the command line arguments
 options = get_arguments()
 
-# Get the current MAC address of the specified interface
-current_mac = get_current_mac(options.interface)
+# Get the current MAC address of the specified interface based on the platform
+current_mac = ""
+if platform.system() == "Linux":
+    current_mac = get_current_mac_linux(options.interface)
+elif platform.system() == "Windows":
+    current_mac = get_current_mac_windows(options.interface)
+
+# Print the current MAC address
 print("[+] Current MAC Address: " + str(current_mac))
 
-# Change the MAC address of the specified interface
-change_mac(options.interface, options.new_mac)
+# Change the MAC address of the specified interface based on the platform
+if platform.system() == "Linux":
+    change_mac_linux(options.interface, options.new_mac)
+elif platform.system() == "Windows":
+    change_mac_windows(options.interface, options.new_mac)
 
-# Get the current MAC address of the specified interface
-current_mac = get_current_mac(options.interface)
+# Get the current MAC address of the specified interface again
+current_mac = ""
+if platform.system() == "Linux":
+    current_mac = get_current_mac_linux(options.interface)
+elif platform.system() == "Windows":
+    current_mac = get_current_mac_windows(options.interface)
 
 # Check if the MAC address was successfully changed
 if current_mac == options.new_mac:
