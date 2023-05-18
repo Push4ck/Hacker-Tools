@@ -76,24 +76,27 @@ def scan_directory(directory: str, algorithm: str) -> None:
     """
     Scan all the files in the given directory and log the results
 
-    Parameters:
-    directory (str): path to the directory to scan
-    algorithm (str): name of the hash algorithm to use
-
-    Returns:
-    None
+    :param directory: Path to the directory to scan
+    :type directory: str
+    :param algorithm: Name of the hash algorithm to use
+    :type algorithm: str
+    :return: None
+    :rtype: None
     """
     try:
         # Check if the directory exists
         if not os.path.exists(directory):
             raise FileNotFoundError(f"Directory not found: {directory}")
+        
         # Check if the path is a directory
         if not os.path.isdir(directory):
             raise TypeError(f"{directory} is not a directory")
+        
         # Loop through all the files and directories within the directory
         for root, dirs, files in os.walk(directory):
             for file in files:
                 file_path = os.path.join(root, file)
+                
                 # Call the check_file_hash function to log the results
                 check_file_hash(file_path, algorithm)
     except FileNotFoundError as e:
