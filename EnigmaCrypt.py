@@ -36,7 +36,10 @@ def caesar_decoder(cipher_text, shift):
         position = ord(letter.lower()) - ord('a')
 
         # Shift the position by the specified amount
-        new_position = (position - shift) % 26
+        if shift >= 0:
+            new_position = (position - shift) % 26
+        else:
+            new_position = (position - shift) % 26
 
         # Convert the new position back to a letter
         decoded_letter = chr(new_position + ord('a'))
