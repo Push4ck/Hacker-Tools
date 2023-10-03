@@ -1,84 +1,53 @@
 import os
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
+import pyzipper
+import shutil
 
-# Function to generate an RSA key pair of the given key size
-def generate_rsa_key(key_size):
-    """Generate an RSA key pair of the given key size."""
-    key = RSA.generate(key_size)
-    return key
+# Function to encrypt a folder using a password
+def encrypt_folder(folder_path, output_folder, password):
+    try:
+        # Create a temporary folder to store the encrypted archive
+        temp_folder = 'temp_encrypted_folder'
+        os.makedirs(temp_folder, exist_ok=True)
 
-# Function to encrypt a file using the given RSA public key
-def encrypt_file(file_path, key):
-    """Encrypt a file using the given RSA public key."""
-    with open(file_path, 'rb') as f:
-        plaintext = f.read()
-    cipher = PKCS1_OAEP.new(key)
-    ciphertext = cipher.encrypt(plaintext)
-    with open(file_path + '.enc', 'wb') as f:
-        f.write(ciphertext)
+        # Copy the contents of the original folder to the temporary folder
+        for item in os.listdir(folder_path):
+            item_path = os.path.join(folder_path, item)
+            if os.path.isdir(item_path):
+                shutil.copytree(item_path, os.path.join(temp_folder, item))
+            else:
+                shutil.copy2(item_path, temp_folder)
 
-# Function to decrypt a file using the given RSA private key
-def decrypt_file(file_path, key):
-    """Decrypt a file using the given RSA private key."""
-    with open(file_path, 'rb') as f:
-        ciphertext = f.read()
-    cipher = PKCS1_OAEP.new(key)
-    plaintext = cipher.decrypt(ciphertext)
-    with open(file_path[:-4], 'wb') as f:
-        f.write(plaintext)
+        # Create a password-protected encrypted ZIP archive of the temporary folder
+        encrypted_filename = "encrypted.zip"
+        output_path = os.path.join(output_folder, encrypted_filename)
+        with pyzipper.AESZipFile(output_path, 'w', compression=pyzipper.ZIP_LZMA, encryption=pyzipper.WZ_AES) as zf:
+            zf.setpassword(password.encode())
+            for root, dirs, files in os.walk(temp_folder):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    arcname = os.path.relpath(file_path, temp_folder)
+                    zf.write(file_path, arcname=arcname)
 
-# Function to encrypt all files in a folder using the given RSA public key
-def encrypt_folder(folder_path, key):
-    """Encrypt all files in a folder using the given RSA public key."""
-    for file_name in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, file_name)
-        if os.path.isfile(file_path):
-            with open(file_path, 'rb') as f:
-                plaintext = f.read()
-            cipher = PKCS1_OAEP.new(key)
-            ciphertext = cipher.encrypt(plaintext)
-            with open(file_path + '.enc', 'wb') as f:
-                f.write(ciphertext)
-            os.remove(file_path)
+        # Remove the temporary folder
+        shutil.rmtree(temp_folder)
 
-# Function to decrypt all files in a folder using the given RSA private key
-def decrypt_folder(folder_path, key):
-    """Decrypt all files in a folder using the given RSA private key."""
-    for file_name in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, file_name)
-        if os.path.isfile(file_path) and file_name.endswith('.enc'):
-            decrypt_file(file_path, key)
+        print("Folder encrypted successfully.")
+        print(f"Encrypted file saved to: {output_path}")
 
-# Prompt the user to enter the folder path and key size
+    except Exception as e:
+        print("Encryption failed:", str(e))
+
+# Prompt the user to enter the folder path, password, and destination folder
 while True:
     try:
         folder_path = input("Enter the folder path: ")
         if not os.path.isdir(folder_path):
             raise ValueError("Invalid folder path. Please enter a valid path.")
-        key_size = int(input("Enter the RSA key size (in bits): "))
-        if key_size <= 0:
-            raise ValueError("Invalid key size.")
+        password = input("Enter the encryption password: ")
+        output_folder = input("Enter the destination folder where the encrypted file should be saved: ")
+        os.makedirs(output_folder, exist_ok=True)
+
+        encrypt_folder(folder_path, output_folder, password)
         break
     except ValueError as e:
-        print(str(e))
-
-# Generate an RSA key pair
-key = generate_rsa_key(key_size)
-
-# Encrypt or decrypt the folder
-while True:
-    try:
-        action = input("Do you want to encrypt or decrypt the folder? (E/D): ")
-        if action.upper() == 'E':
-            encrypt_folder(folder_path, key.publickey())
-            print("Folder encrypted successfully.")
-            break
-        elif action.upper() == 'D':
-            decrypt_folder(folder_path, key)
-            print("Folder decrypted successfully.")
-            break
-        else:
-            raise ValueError("Invalid action.")
-    except ValueError as e:
-        print(str(e))
+        print("Error:", str(e))
