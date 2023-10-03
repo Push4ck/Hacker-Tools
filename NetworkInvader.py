@@ -1,10 +1,9 @@
-import subprocess
 import sys
-import platform
 import re
-
+import wmi
 
 def change_ip(interface="", new_ip="", subnet_mask="", gateway="", check=False):
+    # Prompt for missing input parameters
     if not interface:
         interface = input("Enter the interface name: ")
     if not new_ip:
@@ -14,45 +13,77 @@ def change_ip(interface="", new_ip="", subnet_mask="", gateway="", check=False):
     if not gateway:
         gateway = input("Enter the default gateway: ")
 
+    # Check if any of the required parameters are missing
     if not interface or not new_ip or not subnet_mask or not gateway:
-        raise ValueError("Error: interface, new_ip, subnet_mask, and gateway are all required parameters")
+        print("Error: interface, new_ip, subnet_mask, and gateway are all required parameters")
+        return 1
 
+    # Validate input types and formats
     if not isinstance(new_ip, str) or not isinstance(subnet_mask, str) or not isinstance(gateway, str):
-        raise TypeError("Error: Invalid input type. All inputs must be strings.")
+        print("Error: Invalid input type. All inputs must be strings.")
+        return 1
 
     if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", new_ip):
-        raise ValueError("Error: Invalid IP address format")
+        print("Error: Invalid IP address format")
+        return 1
 
     if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", subnet_mask):
-        raise ValueError("Error: Invalid subnet mask format")
+        print("Error: Invalid subnet mask format")
+        return 1
 
     if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", gateway):
-        raise ValueError("Error: Invalid gateway format")
+        print("Error: Invalid gateway format")
+        return 1
 
-    command_list = []
-    if platform.system() == 'Linux':
-        command_list.extend([
-            ['ifconfig', interface, 'down'],
-            ['ifconfig', interface, 'inet', new_ip, 'netmask', subnet_mask],
-            ['ifconfig', interface, 'up'],
-            ['route', 'add', 'default', 'gw', gateway]
-        ])
-    else:
-        raise NotImplementedError(f"Error: This code is only supported on Linux systems. Current operating system is {platform.system()}.")
+    try:
+        # Connect to the Windows Management Instrumentation (WMI) service
+        wmiService = wmi.WMI()
+        
+        # Get network adapter configurations for IP-enabled adapters
+        networkConfigs = wmiService.Win32_NetworkAdapterConfiguration(IPEnabled=True)
 
-    for command in command_list:
-        try:
-            subprocess.check_call(command)
-        except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Error: Command '{' '.join(command)}' failed with error code {e.returncode}") from e
+        # Iterate through network adapter configurations
+        for config in networkConfigs:
+            if config.Description == interface:
+                # Set the IP address and subnet mask
+                result = config.EnableStatic(IPAddress=[new_ip], SubnetMask=[subnet_mask])
+                if result[0] == 0:
+                    print("IP address set successfully.")
+                else:
+                    print(f"Error setting IP address. Error code: {result[0]}")
+                    return result[0]
+
+                # Set the default gateway
+                result = config.SetGateways(DefaultIPGateway=[gateway])
+                if result[0] == 0:
+                    print("Default gateway set successfully.")
+                else:
+                    print(f"Error setting default gateway. Error code: {result[0]}")
+                    return result[0]
+
+    except Exception as e:
+        # Handle exceptions, if any
+        print(f"Error: {str(e)}")
+        return 1
 
     if check:
-        if platform.system() == 'Linux':
-            try:
-                subprocess.check_output(['ip', '-4', 'address', 'show', interface])
-            except subprocess.CalledProcessError as e:
-                raise RuntimeError(f"Error: Command 'ip -4 address show {interface}' failed with error code {e.returncode}") from e
+        try:
+            # Retrieve and print the current IP configuration
+            wmiService = wmi.WMI()
+            networkConfigs = wmiService.Win32_NetworkAdapterConfiguration(IPEnabled=True)
 
+            for config in networkConfigs:
+                if config.Description == interface:
+                    print("Current IP Configuration:")
+                    print(f"IP Address: {config.IPAddress[0]}")
+                    print(f"Subnet Mask: {config.IPSubnet[0]}")
+                    print(f"Default Gateway: {config.DefaultIPGateway[0]}")
+
+        except Exception as e:
+            # Handle exceptions, if any
+            print(f"Error: {str(e)}")
+            return 1
 
 if __name__ == '__main__':
+    # Execute the change_ip function and exit the script
     sys.exit(change_ip())
