@@ -1,89 +1,99 @@
+import argparse
 import sys
 import re
 import wmi
 
-def change_ip(interface="", new_ip="", subnet_mask="", gateway="", check=False):
-    # Prompt for missing input parameters
-    if not interface:
-        interface = input("Enter the interface name: ")
-    if not new_ip:
-        new_ip = input("Enter the new IP address: ")
-    if not subnet_mask:
-        subnet_mask = input("Enter the subnet mask: ")
-    if not gateway:
-        gateway = input("Enter the default gateway: ")
 
-    # Check if any of the required parameters are missing
-    if not interface or not new_ip or not subnet_mask or not gateway:
-        print("Error: interface, new_ip, subnet_mask, and gateway are all required parameters")
-        return 1
+def validate_ip(ip: str) -> bool:
+    """Check if the provided string is a valid IPv4 address."""
+    pattern = r'^(\d{1,3}\.){3}\d{1,3}$'
+    if not re.match(pattern, ip):
+        return False
+    return all(0 <= int(part) <= 255 for part in ip.split('.'))
 
-    # Validate input types and formats
-    if not isinstance(new_ip, str) or not isinstance(subnet_mask, str) or not isinstance(gateway, str):
-        print("Error: Invalid input type. All inputs must be strings.")
-        return 1
 
-    if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", new_ip):
-        print("Error: Invalid IP address format")
-        return 1
+def list_interfaces():
+    """Print all active IP-enabled interfaces."""
+    w = wmi.WMI()
+    print("🔧 Available Network Interfaces:")
+    for nic in w.Win32_NetworkAdapterConfiguration(IPEnabled=True):
+        print(f"  - {nic.Description}")
 
-    if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", subnet_mask):
-        print("Error: Invalid subnet mask format")
-        return 1
 
-    if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", gateway):
-        print("Error: Invalid gateway format")
-        return 1
+def change_ip(interface: str, new_ip: str, subnet: str, gateway: str) -> int:
+    """Change IP address, subnet mask, and gateway of the given interface."""
+    w = wmi.WMI()
+    adapters = w.Win32_NetworkAdapterConfiguration(IPEnabled=True)
+    for nic in adapters:
+        if nic.Description == interface:
+            ip_result = nic.EnableStatic(IPAddress=[new_ip], SubnetMask=[subnet])
+            gw_result = nic.SetGateways(DefaultIPGateway=[gateway])
 
-    try:
-        # Connect to the Windows Management Instrumentation (WMI) service
-        wmiService = wmi.WMI()
-        
-        # Get network adapter configurations for IP-enabled adapters
-        networkConfigs = wmiService.Win32_NetworkAdapterConfiguration(IPEnabled=True)
+            if ip_result[0] != 0:
+                print(f"❌ Failed to set IP address. Error code: {ip_result[0]}")
+                return ip_result[0]
 
-        # Iterate through network adapter configurations
-        for config in networkConfigs:
-            if config.Description == interface:
-                # Set the IP address and subnet mask
-                result = config.EnableStatic(IPAddress=[new_ip], SubnetMask=[subnet_mask])
-                if result[0] == 0:
-                    print("IP address set successfully.")
-                else:
-                    print(f"Error setting IP address. Error code: {result[0]}")
-                    return result[0]
+            if gw_result[0] != 0:
+                print(f"❌ Failed to set default gateway. Error code: {gw_result[0]}")
+                return gw_result[0]
 
-                # Set the default gateway
-                result = config.SetGateways(DefaultIPGateway=[gateway])
-                if result[0] == 0:
-                    print("Default gateway set successfully.")
-                else:
-                    print(f"Error setting default gateway. Error code: {result[0]}")
-                    return result[0]
+            print("✅ IP address and gateway configured successfully.")
+            return 0
 
-    except Exception as e:
-        # Handle exceptions, if any
-        print(f"Error: {str(e)}")
-        return 1
+    print(f"❌ Interface '{interface}' not found.")
+    return 1
 
-    if check:
-        try:
-            # Retrieve and print the current IP configuration
-            wmiService = wmi.WMI()
-            networkConfigs = wmiService.Win32_NetworkAdapterConfiguration(IPEnabled=True)
 
-            for config in networkConfigs:
-                if config.Description == interface:
-                    print("Current IP Configuration:")
-                    print(f"IP Address: {config.IPAddress[0]}")
-                    print(f"Subnet Mask: {config.IPSubnet[0]}")
-                    print(f"Default Gateway: {config.DefaultIPGateway[0]}")
+def check_config(interface: str):
+    """Display current IP config for the given interface."""
+    w = wmi.WMI()
+    for nic in w.Win32_NetworkAdapterConfiguration(IPEnabled=True):
+        if nic.Description == interface:
+            print("🔍 Current IP Configuration:")
+            print(f"  Interface: {interface}")
+            print(f"  IP Address: {nic.IPAddress[0]}")
+            print(f"  Subnet Mask: {nic.IPSubnet[0]}")
+            print(f"  Gateway: {nic.DefaultIPGateway[0]}")
+            return
+    print(f"⚠️ Interface '{interface}' not found.")
 
-        except Exception as e:
-            # Handle exceptions, if any
-            print(f"Error: {str(e)}")
-            return 1
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Set static IP, subnet mask, and gateway for a network interface on Windows.",
+        epilog="Example: python change_ip.py --interface 'Intel(R) Ethernet Connection' --ip 192.168.1.100 --subnet 255.255.255.0 --gateway 192.168.1.1 --check"
+    )
+
+    parser.add_argument('--interface', help="Interface name (use --list to find one)")
+    parser.add_argument('--ip', help="New IP address (e.g., 192.168.1.100)")
+    parser.add_argument('--subnet', help="Subnet mask (e.g., 255.255.255.0)")
+    parser.add_argument('--gateway', help="Default gateway (e.g., 192.168.1.1)")
+    parser.add_argument('--check', action='store_true', help="Check and display new configuration")
+    parser.add_argument('--list', action='store_true', help="List available network interfaces")
+
+    args = parser.parse_args()
+
+    if args.list:
+        list_interfaces()
+        sys.exit(0)
+
+    if not all([args.interface, args.ip, args.subnet, args.gateway]):
+        print("❌ Error: --interface, --ip, --subnet, and --gateway are required unless using --list.")
+        parser.print_help()
+        sys.exit(1)
+
+    for label, val in [('IP', args.ip), ('Subnet', args.subnet), ('Gateway', args.gateway)]:
+        if not validate_ip(val):
+            print(f"❌ Invalid {label} format: {val}")
+            sys.exit(1)
+
+    exit_code = change_ip(args.interface, args.ip, args.subnet, args.gateway)
+
+    if args.check:
+        check_config(args.interface)
+
+    sys.exit(exit_code)
+
 
 if __name__ == '__main__':
-    # Execute the change_ip function and exit the script
-    sys.exit(change_ip())
+    main()
