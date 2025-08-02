@@ -411,7 +411,3 @@ This project is licensed under the MIT License with additional security terms - 
 Special thanks to the cybersecurity community for inspiration and the open-source projects that make this toolkit possible.
 
 **Educational Disclaimer:** This toolkit is intended for educational purposes, authorized security testing, and cybersecurity research only. Users are responsible for ensuring compliance with applicable laws and regulations.
-
----
-
-_Built with ❤️ by security professionals, for security professionals._
