@@ -1,0 +1,89 @@
+# Professional Security Toolkit - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core Networking & HTTP
+requests>=2.31.0
+urllib3>=2.0.0
+scapy>=2.5.0
+
+# CLI & User Experience
+argparse  # Built-in, but listed for completeness
+rich>=13.0.0
+colorama>=0.4.6
+
+# System & Process Management
+psutil>=5.9.0
+
+# JSON & Data Processing
+json  # Built-in
+csv   # Built-in
+
+# Network Interface Management (Windows)
+# Note: WMI is Windows-specific and installed automatically on Windows systems
+# For cross-platform network interface detection
+netifaces>=0.11.0
+
+# Password & Cryptographic Operations
+secrets  # Built-in
+random   # Built-in
+string   # Built-in
+hashlib  # Built-in
+
+# File & Path Operations
+pathlib  # Built-in (Python 3.4+)
+os       # Built-in
+sys      # Built-in
+
+# Time & Date Operations
+time     # Built-in
+datetime # Built-in
+
+# Regular Expressions & Text Processing
+re       # Built-in
+
+# Concurrent Operations
+concurrent.futures  # Built-in (Python 3.2+)
+threading          # Built-in
+itertools          # Built-in
+
+# Platform Detection
+platform  # Built-in
+
+# Subprocess Management
+subprocess  # Built-in
+
+# IP Address Handling
+ipaddress  # Built-in (Python 3.3+)
+
+# Logging
+logging  # Built-in
+
+# HTTP Proxy & Advanced Networking (Optional)
+# Uncomment if you need additional networking features
+# pysocks>=1.7.1
+# selenium>=4.15.0
+# fake-useragent>=1.4.0
+
+# Development & Testing Dependencies (Optional)
+# Uncomment for development environment
+# pytest>=7.4.0
+# black>=23.0.0
+# flake8>=6.0.0
+# mypy>=1.5.0
+
+# Security & Cryptography (Optional Advanced Features)
+# Uncomment if implementing additional cryptographic features
+# cryptography>=41.0.0
+# pycryptodome>=3.19.0
+
+# Network Protocol Analysis (Optional)
+# Uncomment for advanced network analysis
+# dpkt>=1.9.8
+# pcapy-ng>=1.0.9
+
+# Additional Utilities (Optional)
+# Uncomment for enhanced functionality
+# tqdm>=4.66.0       # Progress bars
+# click>=8.1.0       # Advanced CLI framework
+# tabulate>=0.9.0    # Table formatting
+# python-nmap>=0.7.1 # Nmap integration

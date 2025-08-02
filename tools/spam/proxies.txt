@@ -1,0 +1,53 @@
+# Sample Proxy Configuration for Educational Testing
+# Format: IP:PORT or full URL
+# Lines starting with # are comments and will be ignored
+
+# Local testing proxies (for lab environments)
+127.0.0.1:8080
+127.0.0.1:8888
+127.0.0.1:3128
+localhost:8080
+
+# Common lab network ranges (TryHackMe, HackTheBox style)
+10.10.10.50:8080
+10.10.10.51:3128
+10.10.11.100:8888
+10.10.14.15:8080
+
+# Private network ranges (for local lab testing)
+192.168.1.100:8080
+192.168.1.101:3128
+192.168.0.50:8888
+192.168.56.10:8080
+
+# Docker/VM common proxy ports
+172.17.0.2:8080
+172.18.0.3:3128
+172.19.0.4:8888
+
+# Educational/CTF common proxy configurations
+10.0.0.10:8080
+10.0.0.11:3128
+10.0.2.15:8888
+
+# Burp Suite proxy (common in pentesting)
+127.0.0.1:8080
+
+# OWASP ZAP proxy (security testing tool)
+127.0.0.1:8081
+
+# Squid proxy common ports
+10.10.10.1:3128
+192.168.1.1:3128
+
+# Tor proxy (for educational purposes)
+127.0.0.1:9050
+
+# Custom lab proxies (modify for your environment)
+# lab.local:8080
+# pentestlab.thm:3128
+# vulnbox.local:8888
+
+# Note: These are example configurations
+# Replace with actual proxy servers you have permission to use
+# Always ensure you have authorization before using any proxy service

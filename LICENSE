@@ -1,0 +1,217 @@
+MIT License
+
+Copyright (c) 2025 Hacker-Tools Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Additional Terms for Security Tools
+
+**IMPORTANT SECURITY DISCLAIMER:**
+
+This software contains security testing tools that are intended for:
+
+- Educational purposes and learning cybersecurity concepts
+- Authorized penetration testing and security assessments
+- Cybersecurity research and development
+- Network administration and system configuration
+- CTF competitions and security training
+
+**PROHIBITED USES:**
+
+Users are strictly prohibited from using this software for:
+
+- Unauthorized access to computer systems or networks
+- Malicious activities or cyber attacks against any system
+- Violation of applicable laws, regulations, or terms of service
+- Any activity that could harm individuals, organizations, or systems
+- Testing systems without explicit written authorization
+
+**USER RESPONSIBILITIES:**
+
+By using this software, you agree to:
+
+- Obtain proper written authorization before testing any systems
+- Comply with all applicable local, state, federal, and international laws
+- Use the tools ethically and responsibly at all times
+- Not use the software for illegal or malicious purposes
+- Take full responsibility for your actions and their consequences
+- Respect the privacy and security of others
+
+**EDUCATIONAL AND AUTHORIZED USE:**
+
+This software is particularly suitable for:
+
+- Cybersecurity training and certification programs
+- University courses in computer security and networking
+- Professional development and skill building
+- Capture The Flag (CTF) competitions and security challenges
+- Authorized penetration testing with proper documentation
+- Personal lab environments and learning platforms
+
+**NO WARRANTY FOR SECURITY:**
+
+While these tools are designed with security best practices in mind:
+
+- No security tool can guarantee complete protection
+- Users should implement comprehensive security strategies
+- Regular updates and patches should be applied promptly
+- Professional security audits are recommended for critical systems
+- Tools should be tested in safe environments before production use
+
+**LIMITATION OF LIABILITY:**
+
+The authors and contributors of this software shall not be held liable for:
+
+- Any damages resulting from the use or misuse of this software
+- Security breaches or vulnerabilities in user systems
+- Legal consequences arising from unauthorized use
+- Any direct, indirect, incidental, or consequential damages
+- Loss of data, system downtime, or business interruption
+
+**COMPLIANCE REQUIREMENTS:**
+
+Users must ensure compliance with:
+
+- Computer Fraud and Abuse Act (CFAA) in the United States
+- General Data Protection Regulation (GDPR) in the European Union
+- Cybersecurity and privacy laws in their jurisdiction
+- Organizational policies and terms of service agreements
+- Professional codes of conduct and ethical guidelines
+
+**REPORTING SECURITY ISSUES:**
+
+If you discover security vulnerabilities in this software:
+
+- Report them responsibly to the project maintainers
+- Do not publicly disclose vulnerabilities without coordination
+- Allow reasonable time for fixes to be developed and deployed
+- Follow responsible disclosure practices and industry standards
+
+**MODIFICATION AND DISTRIBUTION:**
+
+When modifying or distributing this software:
+
+- Maintain this license and disclaimer in all copies
+- Clearly indicate any modifications made to the original software
+- Ensure that recipients understand their responsibilities
+- Do not remove or alter security warnings and disclaimers
+- Document changes and maintain version control
+
+**SUPPORT AND UPDATES:**
+
+- Security updates will be provided on a best-effort basis
+- Users are encouraged to stay updated with the latest versions
+- Community contributions for security improvements are welcome
+- No guarantee is provided for continued maintenance or support
+- Users should monitor security advisories and apply updates promptly
+
+**SURVEILLANCE TOOLS SPECIFIC TERMS:**
+
+For surveillance tools (InfoScope, ShadowTracer):
+
+- Only scan networks you own or have explicit permission to test
+- Respect privacy laws and regulations when intercepting communications
+- Be aware that network scanning may trigger security alerts
+- Use Tor responsibly and in compliance with local laws
+- Obtain proper authorization before monitoring web traffic
+
+**NETWORK SECURITY TOOLS SPECIFIC TERMS:**
+
+For network tools (NetSweepX, NetBreach, PhantomMAC):
+
+- Only test networks you own or have explicit authorization to test
+- Respect network policies and bandwidth limitations
+- MAC address changes may violate network terms of service
+- Use appropriate delays to avoid network congestion
+- Be aware that security testing may trigger defensive measures
+
+**PASSWORD SECURITY TOOLS SPECIFIC TERMS:**
+
+For password tools (BrutePilot, PassForge):
+
+- Generated wordlists are for authorized testing only
+- Do not use against systems without explicit permission
+- Store generated passwords securely and delete when no longer needed
+- Be aware of organizational password policies and requirements
+
+**SPAM TESTING TOOLS SPECIFIC TERMS:**
+
+For spam testing tools (SpamStrike):
+
+- Only test applications and systems you own or have authorization to test
+- Respect rate limits and avoid overwhelming target systems
+- Use appropriate delays between requests
+- Monitor for and respect robots.txt and security policies
+- Stop testing immediately if requested by system administrators
+
+**ACCESS CONTROL TOOLS SPECIFIC TERMS:**
+
+For access control tools (GateKeeper, StealthLocker):
+
+- Only test authentication systems you own or have authorization to test
+- Respect access controls and security policies
+- Use encryption tools responsibly and in compliance with export laws
+- Maintain proper key management and security practices
+
+**CRYPTOGRAPHY TOOLS SPECIFIC TERMS:**
+
+For cryptography tools (CryptoRaptor, EnigmaVault):
+
+- Comply with export restrictions on cryptographic software
+- Use encryption responsibly and in accordance with local laws
+- Maintain proper key management and security practices
+- Be aware that strong encryption may be regulated in some jurisdictions
+
+**MALWARE DETECTION TOOLS SPECIFIC TERMS:**
+
+For malware detection tools (Sentinex):
+
+- Only analyze malware samples in controlled, isolated environments
+- Follow proper malware handling procedures and safety protocols
+- Do not distribute or share malware samples without authorization
+- Comply with laws regarding malware research and analysis
+
+**JURISDICTION AND GOVERNING LAW:**
+
+This license and its terms are governed by the laws of the jurisdiction where
+the software is used. Users are responsible for understanding and complying
+with their local laws and regulations.
+
+**ACKNOWLEDGMENT:**
+
+By downloading, installing, or using this software, you acknowledge that you
+have read, understood, and agree to be bound by these terms and conditions.
+You also acknowledge that cybersecurity tools carry inherent risks and
+responsibilities that must be managed appropriately.
+
+**CONTACT INFORMATION:**
+
+For questions regarding licensing, security concerns, or responsible disclosure:
+
+- Create an issue in the official repository
+- Contact project maintainers through official channels
+- Follow established security reporting procedures
+
+---
+
+**REMEMBER: With great power comes great responsibility. Use these tools wisely.**
+
+_Last updated: February 2025_

